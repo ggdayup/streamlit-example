@@ -1,0 +1,24 @@
+{
+  "email": {
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "sender_email": "your_email@gmail.com",
+    "sender_password": "your_app_password_here",
+    "receiver_email": "receiver@example.com"
+  },
+  "check_interval": 3600,
+  "selenium": {
+    "headless": true,
+    "wait_time": 10
+  },
+  "_comments": {
+    "smtp_server": "SMTP服务器地址（Gmail: smtp.gmail.com, QQ: smtp.qq.com, 163: smtp.163.com）",
+    "smtp_port": "SMTP端口（通常587用于TLS）",
+    "sender_email": "发件人邮箱地址",
+    "sender_password": "邮箱密码或应用专用密码（Gmail需要使用App Password）",
+    "receiver_email": "接收通知的邮箱地址",
+    "check_interval": "检查间隔（秒），3600=1小时",
+    "selenium.headless": "是否使用无头模式（后台运行）",
+    "selenium.wait_time": "页面加载等待时间（秒）"
+  }
+}
