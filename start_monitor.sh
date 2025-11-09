@@ -21,43 +21,50 @@ if ! python3 -c "import requests, bs4" 2>/dev/null; then
     exit 1
 fi
 
+echo "⚠️  重要: 网站有严格的反爬虫保护，自动监控可能失败"
+echo "   详情查看: cat AUTOMATED_MONITORING_STATUS.md"
+echo ""
 echo "选择运行模式:"
 echo ""
-echo "推荐模式 (适合有反爬虫保护的网站):"
-echo "  1) 手动辅助模式 ⭐ 推荐"
-echo "  2) 网站访问诊断工具"
+echo "诊断工具:"
+echo "  1) 网站访问诊断"
 echo ""
-echo "自动监控模式 (可能遇到403错误):"
-echo "  3) 单次检查 (基础HTTP)"
-echo "  4) 持续监控 (基础HTTP)"
-echo "  5) 后台运行 (基础HTTP)"
+echo "自动监控模式 (⚠️  当前都遇到403错误):"
+echo "  2) 增强自动监控 - 单次 (Cloudscraper)"
+echo "  3) 增强自动监控 - 持续 (Cloudscraper)"
+echo "  4) 基础HTTP - 单次"
+echo "  5) 基础HTTP - 持续"
+echo "  6) 基础HTTP - 后台运行"
 echo ""
-echo "高级模式 (需要Chrome浏览器):"
-echo "  6) Selenium版本 - 单次检查"
-echo "  7) Selenium版本 - 持续监控"
+echo "浏览器自动化 (建议在本地机器运行):"
+echo "  7) Selenium - 单次检查"
+echo "  8) Selenium - 持续监控"
+echo "  9) Playwright - 单次检查"
 echo ""
-read -p "请选择 (1-7): " choice
+read -p "请选择 (1-9): " choice
 
 case $choice in
     1)
-        echo "启动手动辅助模式..."
-        echo "说明: 你可以手动录入从网站看到的新通知"
-        echo ""
-        python3 yau_awards_monitor_manual.py
-        ;;
-    2)
         echo "运行网站访问诊断..."
         python3 test_website_access.py
         ;;
+    2)
+        echo "开始增强自动监控 (单次)..."
+        python3 yau_awards_monitor_auto.py --once
+        ;;
     3)
+        echo "开始增强自动监控 (持续，按Ctrl+C停止)..."
+        python3 yau_awards_monitor_auto.py
+        ;;
+    4)
         echo "开始单次检查 (基础HTTP)..."
         python3 yau_awards_monitor.py --once
         ;;
-    4)
+    5)
         echo "开始持续监控 (基础HTTP，按Ctrl+C停止)..."
         python3 yau_awards_monitor.py
         ;;
-    5)
+    6)
         echo "启动后台监控 (基础HTTP)..."
         nohup python3 yau_awards_monitor.py > monitor.log 2>&1 &
         PID=$!
@@ -65,13 +72,20 @@ case $choice in
         echo "  查看日志: tail -f monitor.log"
         echo "  停止监控: kill $PID"
         ;;
-    6)
+    7)
         echo "开始Selenium单次检查..."
+        echo "💡 提示: 建议在本地机器(非容器)运行"
         python3 yau_awards_monitor_selenium.py --once
         ;;
-    7)
+    8)
         echo "开始Selenium持续监控 (按Ctrl+C停止)..."
+        echo "💡 提示: 建议在本地机器(非容器)运行"
         python3 yau_awards_monitor_selenium.py
+        ;;
+    9)
+        echo "开始Playwright单次检查..."
+        echo "💡 提示: 需要playwright浏览器"
+        python3 yau_awards_monitor_playwright.py --once
         ;;
     *)
         echo "无效选择"
