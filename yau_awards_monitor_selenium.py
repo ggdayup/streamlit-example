@@ -81,8 +81,20 @@ class YauAwardsMonitorSelenium:
             'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         )
 
+        # 设置Chromium二进制路径
+        import shutil
+        chromium_path = shutil.which('chromium') or '/opt/chromium/chrome'
+        if os.path.exists(chromium_path):
+            chrome_options.binary_location = chromium_path
+
         try:
-            driver = webdriver.Chrome(options=chrome_options)
+            # 尝试使用匹配版本的ChromeDriver
+            chromedriver_path = '/usr/local/bin/chromedriver-111'
+            if os.path.exists(chromedriver_path):
+                service = Service(executable_path=chromedriver_path)
+                driver = webdriver.Chrome(service=service, options=chrome_options)
+            else:
+                driver = webdriver.Chrome(options=chrome_options)
             # 隐藏webdriver特征
             driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
             return driver
